@@ -1,10 +1,9 @@
 package br.com.fiap.financewalk.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fiap.financewalk.model.Category;
+import br.com.fiap.financewalk.repository.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -25,19 +25,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CategoryController {
 
-    private List<Category> repository = new ArrayList<>();
+    @Autowired // Injection of dependency
+    private CategoryRepository categoryRepository;
 
     @GetMapping
     public List<Category> index() {
-        return repository;
+        return categoryRepository.findAll();
     }
 
     @PostMapping
-    @ResponseStatus(code = HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
     public Category create(@RequestBody Category category){
-        category.setId(Math.abs(new Random().nextLong()));
         log.info("criando categoria " + category);
-        repository.add(category);
+        categoryRepository.save(category);
         return category;
     }
 
@@ -60,7 +60,7 @@ public class CategoryController {
 
         if (categoryFound.isEmpty()) return ResponseEntity.notFound().build();
 
-        repository.remove(categoryFound.get());
+        categoryRepository.delete(categoryFound.get());
 
         return ResponseEntity.noContent().build();
     }
@@ -71,19 +71,16 @@ public class CategoryController {
 
         var categoryFound = getCategoryById(id);
 
-        if (categoryFound.isEmpty()) return ResponseEntity.notFound().build(); //TODO refatorar
+        if (categoryFound.isEmpty()) return ResponseEntity.notFound().build();
 
-        repository.remove(categoryFound.get());
         categoryUpdated.setId(id);
-        repository.add(categoryUpdated);
+
+        categoryRepository.save(categoryUpdated);
 
         return ResponseEntity.ok(categoryUpdated);
     }
 
     private Optional<Category> getCategoryById(Long id) {
-        var categoryFound = repository.stream()
-                .filter(category -> category.getId().equals(id))
-                .findFirst();
-        return categoryFound;
+        return categoryRepository.findById(id);
     }
 }
