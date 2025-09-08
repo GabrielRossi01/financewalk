@@ -1,6 +1,5 @@
 package br.com.fiap.financewalk.model;
 
-import br.com.fiap.financewalk.validation.Icon;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,7 +22,6 @@ public class Category {
     @NotBlank(message = "{category.name.notblank}")
     private String name;
 
-    @NotBlank(message = "{category.icon.notblank}")
-    @Icon
+    //@Icon
     private String icon;
 }

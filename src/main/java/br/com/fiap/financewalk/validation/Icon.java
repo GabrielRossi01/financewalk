@@ -13,9 +13,10 @@ import jakarta.validation.Payload;
 @Constraint(validatedBy = IconValidator.class)
 public @interface Icon {
 
-    String message() default "{icon.invalid}";
+	String message() default "{icon.invalid}";
 
-	Class<?>[] groups() default { };
+	Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default { };
+	Class<? extends Payload>[] payload() default {};
+
 }
