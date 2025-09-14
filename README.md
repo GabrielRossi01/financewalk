@@ -22,7 +22,7 @@ O projeto foi construído com as seguintes tecnologias e dependências:
 
 - Insomnia: ferramenta de teste de integração.
 
-# 🛞 Como rodar o projeto?
+## 🛞 Como rodar o projeto?
 
 Para executar o projeto localmente, siga os seguintes passos:
 
