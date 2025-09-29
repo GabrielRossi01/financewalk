@@ -37,8 +37,8 @@ public class DatabaseSeeder {
         categoryRepository.saveAll(categories);
 
         var descriptions = List.of(
-            "Livro de Java", "Mensalidade da Faculdade", "Bilhere Único", "Taxa do Uber",
-            "Cinema domingo", "Futebol com amigos", "Cerveja gelada"
+            "Livro de Java da Faculdade", "Mensalidade da Faculdade", "Bilhere Único", "Taxa do Uber",
+            "Cinema domingo", "Futebol com amigos", "Cerveja gelada", "Entretenimento"
         );
 
         for(int i = 0; i < 50; i++) {
@@ -46,7 +46,7 @@ public class DatabaseSeeder {
                 Transaction.builder()
                             .description(descriptions.get(random.nextInt(descriptions.size())))
                             .amount(BigDecimal.valueOf(random.nextDouble() * 500))
-                            .date(LocalDate.now().minusDays(random.nextInt(90)))
+                            .date(LocalDate.now().minusDays(random.nextInt(7)))
                             .type(TransactionType.EXPENSE)
                             .category(categories.get(random.nextInt(categories.size())))
                             .build()
