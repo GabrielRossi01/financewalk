@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.financewalk.model.Category;
 import br.com.fiap.financewalk.repository.CategoryRepository;
@@ -26,18 +25,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CategoryController {
 
-    private final CategoryService categoryService;
-
     @Autowired // Injection of dependency
     private CategoryRepository categoryRepository;
 
-    CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping
     public List<Category> index() {
-        return categoryRepository.findAll();
+        return categoryService.findAll();
     }
 
     @PostMapping
@@ -50,30 +46,19 @@ public class CategoryController {
     @GetMapping("{id}") // chaves indica que o id é uma variável
     public Category get(@PathVariable Long id) {
         log.info("buscando categoria com id " + id);
-        return getCategoryById(id);
+        return categoryService.getCategoryById(id);
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable Long id) {
         log.info("apagando categoria com id {}", id);
-        categoryRepository.delete(getCategoryById(id));
+        categoryService.deleteById(id);
     }
 
     @PutMapping("{id}")
     public Category update(@RequestBody @Valid Category categoryUpdated, @PathVariable Long id) {
         log.info("atualizando categoria {} com id {}", categoryUpdated, id);
-
-        getCategoryById(id);
-        categoryUpdated.setId(id);
-        return categoryRepository.save(categoryUpdated);
-    }
-
-    private Category getCategoryById(Long id) {
-        return categoryRepository
-                    .findById(id)
-                    .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tarefa não encontrada com id " + id)
-                    );
+        return categoryService.update(categoryUpdated, id);
     }
 }
